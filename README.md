@@ -18,3 +18,15 @@ bars show each fiber's centerline length and axial orientation. Orientation is
 Pass `--debug` to also save masks, detector responses, labels, and skeletons
 as `.npy` arrays. `--units-per-pixel 0.0` means no calibration, so graph lengths
 remain source-image pixels regardless of `--unit-name`.
+
+## Parameter sweeps
+
+```bash
+uv run python -m fiber_analysis sweep --input data/images --output results/sweeps \
+  --methods adaptive_skeleton,multiscale_ridge,line_segments \
+  --config config/default.yaml --max-images 1
+```
+
+Sweeps vary one parameter at a time. Each plot shows accepted/rejected counts,
+median length, and detected-mask coverage. `--max-images 0` averages all images.
+Sweep values live under `sweep` in `config/default.yaml`.

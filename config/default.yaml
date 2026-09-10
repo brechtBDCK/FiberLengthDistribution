@@ -9,6 +9,20 @@ ridge:
   low_percentile: 92
   high_percentile: 98
 postprocess:
-  min_component_area: 5
+  min_component_area: 20
   min_length_px: 5
   spur_length_px: 5
+sweep:
+  adaptive_skeleton:
+    adaptive.background_sigma: [15, 25, 40, 60, 90]
+    adaptive.contrast_sigma: [3, 5, 9, 15, 25]
+    adaptive.z_threshold: [1.2, 1.5, 1.8, 2.1, 2.5, 3.0]
+  multiscale_ridge:
+    ridge.sigmas: [[1], [1, 2], [1, 2, 3], [1, 2, 3, 5], [1, 2, 3, 5, 7]]
+    ridge.low_percentile: [80, 85, 90, 92, 94, 96]
+    ridge.high_percentile: [95, 97, 98, 99, 99.5]
+  line_segments:
+    lines.min_length: [10, 20, 25, 40, 60, 100]
+    lines.angle_degrees: [3, 5, 10, 15, 20]
+    lines.gap: [5, 10, 20, 30, 50]
+    lines.distance: [2, 4, 8, 12, 16]
