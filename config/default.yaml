@@ -1,0 +1,14 @@
+max_analysis_pixels: 500000 
+edge_crop_fraction: 0.01
+adaptive:
+  background_sigma: 40
+  contrast_sigma: 9
+  z_threshold: 1.8
+ridge:
+  sigmas: [1, 2, 3, 5]
+  low_percentile: 92
+  high_percentile: 98
+postprocess:
+  min_component_area: 5
+  min_length_px: 5
+  spur_length_px: 5
