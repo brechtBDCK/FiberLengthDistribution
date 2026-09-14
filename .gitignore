@@ -11,3 +11,8 @@ wheels/
 data
 data_webp
 results
+fibre_crossing_toolkit
+comparison_bundle
+segmentation_model
+.agents
+fiber_instance_rfdetr_project

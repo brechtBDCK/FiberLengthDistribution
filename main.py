@@ -10,7 +10,7 @@ from skimage.morphology import remove_small_objects, skeletonize
 input_path = Path(
     "/home/bdck/PROJECTS_WSL/FiberLengthDistribution/"
     "data_webp/Glasvezels 1- 4 mm/beker_1/"
-    "250429-Z50-B1-P1-F1`.webp"
+    "250429-Z50-B1-P2-F1`.png"
 )
 
 output_dir = input_path.parent / "processed"

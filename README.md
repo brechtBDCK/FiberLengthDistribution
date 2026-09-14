@@ -1,32 +1,70 @@
-## Fiber analysis
+# AI line detector bake-off
+
+Five entry points for the methods discussed:
+
+- `linea_detect.py` — LINEA
+- `hawpv3_detect.py` — HAWPv3
+- `deeplsd_detect.py` — DeepLSD
+- `sold2_detect.py` — SOLD2 via Kornia
+- `letr_detect.py` — LETR (official notebook launcher; old repo has no clean maintained CLI)
+
+## Common install
+
+Create a fresh environment first:
 
 ```bash
-uv run python -m fiber_analysis analyze --input data/images --output results \
-  --methods adaptive_skeleton,multiscale_ridge,line_segments \
-  --config config/default.yaml --units-per-pixel 0.0 --unit-name um
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+pip install torch torchvision opencv-python numpy
 ```
 
-Lengths are centerline/geodesic skeleton lengths in pixels (not fitted curves).
-Images above `max_analysis_pixels` are downscaled for detection; reported pixel
-lengths, widths, centroids, and endpoints are scaled back to source pixels.
-Set `--units-per-pixel` only with a real calibration. `unet` safely reports
-skipped until PyTorch and trained weights configured under `unet.weights` exist.
-Each image/method produces two PNG graphs. Titles show accepted fiber count;
-bars show each fiber's centerline length and axial orientation. Orientation is
-`0° = horizontal`, `90° = vertical`, and always lies in `[0, 180)`.
-
-Pass `--debug` to also save masks, detector responses, labels, and skeletons
-as `.npy` arrays. `--units-per-pixel 0.0` means no calibration, so graph lengths
-remain source-image pixels regardless of `--unit-name`.
-
-## Parameter sweeps
+Then run one detector, e.g.
 
 ```bash
-uv run python -m fiber_analysis sweep --input data/images --output results/sweeps \
-  --methods adaptive_skeleton,multiscale_ridge,line_segments \
-  --config config/default.yaml --max-images 1
+python sold2_detect.py my_image.png --output sold2.png
+python deeplsd_detect.py my_image.png --output deeplsd.png
+python hawpv3_detect.py my_image.png --output hawp.png --threshold 0.05
+python linea_detect.py my_image.png --model l
+python letr_detect.py my_image.png
 ```
 
-Sweeps vary one parameter at a time. Each plot shows accepted/rejected counts,
-median length, and detected-mask coverage. `--max-images 0` averages all images.
-Sweep values live under `sweep` in `config/default.yaml`.
+## Recommendation
+
+Start with SOLD2 and DeepLSD because they are the easiest to get running. Then try
+LINEA and HAWPv3 in separate environments because their repos have more specific
+dependency assumptions. LETR is much older and the official distribution is notebook-based.
+
+## Outputs
+
+DeepLSD and SOLD2 save:
+- a PNG overlay
+- a JSON file with line endpoints
+
+HAWPv3 and LINEA use the authors' official visualization scripts.
+
+## Important dependency note
+
+The *checkpoint files* are relatively small (generally tens to a few hundred MB),
+but PyTorch/CUDA environments can consume several GB. HAWP and LETR in particular
+may need their own environment because their code targets older PyTorch releases.
+
+## SynthMT SAM3Text + HPO
+
+`sam3text_detect.py` reproduces SynthMT's published best SAM3Text settings:
+text prompt `thin line`, its HPO thresholds, and preprocessing. Set `INPUT_PATH`
+at its top, accept access for [`facebook/sam3`](https://huggingface.co/facebook/sam3),
+authenticate with Hugging Face if needed, then run:
+
+```bash
+uv run python sam3text_detect.py
+```
+
+It writes `overlay.png`, `instances.tiff` (16-bit instance IDs), and one PNG
+per instance into `<image folder>/<image stem>_sam3text_hpo/`. No CLI arguments.
+
+## Why the scripts clone official repos
+
+These research models are not all packaged as stable Hugging Face Transformers
+models. Cloning the official code and downloading the authors' official checkpoint
+is usually more reproducible than copying model architecture code into a standalone script.
