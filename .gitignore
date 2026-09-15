@@ -15,4 +15,10 @@ fibre_crossing_toolkit
 comparison_bundle
 segmentation_model
 .agents
-fiber_instance_rfdetr_project
+fiber_instance_rfdetr_project/runs
+fiber_instance_rfdetr_project/runs/rfdetr_fibers
+fiber_instance_rfdetr_project/runs/active_learning
+fiber_instance_rfdetr_project/debug/predictions
+fiber_instance_rfdetr_project/debug/predictions/00_250428-Z50-B2-P1-F1__x1152_y0576.png_gt.png
+rf-detr approach
+rf-detr approach/runs
