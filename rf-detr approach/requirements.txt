@@ -1,0 +1,5 @@
+rfdetr[train,visual,loggers]
+opencv-python
+Pillow
+numpy
+supervision
